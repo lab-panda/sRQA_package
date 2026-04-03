@@ -20,4 +20,5 @@ install.packages("path/to/sRQA_0.3.0.tar.gz", repos = NULL, type = "source")
 | `case3` | fMRI: dorsal attention network during movie-viewing and rest |
 | `case4` | Speech: pause dynamics in truthful and deceptive statements (forthcoming) |
 
-Case studies correspond to examples in the accompanying preprint (DOI forthcoming).
+Case studies correspond to examples in the accompanying preprint: 
+https://doi.org/10.64898/2026.03.31.715624
