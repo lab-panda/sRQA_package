@@ -7,8 +7,6 @@
 # ===============================
 
 library(stringr)
-library(textdata)
-library(tidytext)
 library(dplyr)
 library(readr)
 library(sRQA)
@@ -49,10 +47,6 @@ mu3d_sequential_final <- mu3d_sequential %>%
 mu3d_sequential_final <- mu3d_sequential_final %>%
   select(participant_ID, everything(), -Video.Filename, -VideoID)
 
-# Convert POS from list to character 
-mu3d_sequential_final$POS <- sapply(mu3d_sequential_final$POS, 
-                                    function(x) paste(x, collapse = ","))
-
 # =============================================
 # PART 2: BINARIZE PAUSES AND COMPUTE sRQA
 deception_data <- mu3d_sequential_final
@@ -67,7 +61,6 @@ deception_data <- deception_data %>%
 #convert POS to numeric, make readable labels
 deception_data <- deception_data %>%
   mutate(
-    POS_numeric = as.numeric(as.factor(POS)),
     Valence_label = ifelse(Valence == 1, "Positive", "Negative"),
     Veracity_label = ifelse(Veracity == 1, "Truth", "Lie")
   )
@@ -192,4 +185,4 @@ final_data_with_pause <- participant_conditions_pause %>% #merge w original part
 final_data_with_pause
 
 write_csv(final_data_with_pause, 
-          file.path(results_base, "deception_srqa_with_pause_1120_final.csv"))
+          file.path(data_dir, "deception_srqa_with_pause_1120_final.csv"))
