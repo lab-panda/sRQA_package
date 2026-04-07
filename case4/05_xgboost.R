@@ -25,7 +25,7 @@ data_dir <- "."  # UPDATE to your local data directory
 results_dir <- file.path(data_dir, "results")
 if (!dir.exists(results_dir)) dir.create(results_dir, recursive = TRUE)
 
-srqa_data <- read_csv("C:/Users/etm2132/Desktop/projects/mu3d_sequential/deception_results_srqa/with_pause/deception_srqa_with_pause_1120_final.csv")
+srqa_data <- read_csv(file.path(data_dir, "deception_srqa_with_pause_1120_final.csv"))
 
 # create labels for valence (neg/pos)
 srqa_data <- srqa_data %>%
@@ -127,15 +127,12 @@ search_space <- ps(
   lambda = p_dbl(lower = 0, upper = 3)
 )
 
-
 # Set up resampling strategy - Leave One Out CV
 veracity_loo <- rsmp("loo")
 
 # Define tuning strategy - Random search
 # Paul suggests 1000+ iterations in real life: starting with 10 for now
 veracity_tuner <- tnr("hyperband", eta =2) #could change to 1 later w higher nevals
-
-
 
 # Create tuning instance
 veracity_tune_instance <- TuningInstanceSingleCrit$new(
@@ -202,7 +199,6 @@ roc_obj <- roc(
   quiet = TRUE)
 
 auc_final <- auc(roc_obj)
-
 
 #now lets find p values nd spec, sens, ppv, npv
 optimal_coords <- coords(roc_obj, "best", ret = c("threshold", "sensitivity", "specificity"), 

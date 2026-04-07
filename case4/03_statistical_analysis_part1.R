@@ -66,7 +66,7 @@ metric_labels <- c(
 )
 
 # =====================================================================
-# PART 1: TWO-WAY MODELS (Veracity * Valence + Sex + Race)
+# TWO-WAY MODELS (Veracity * Valence + Sex + Race)
 # Fit the model( z scored) 
 # Random intercept for participant: (1|participant_ID)
 # interaction of Veracity*Valence, plus Sex and Race covariates
@@ -163,7 +163,7 @@ write.csv(beta_df, file.path(results_dir, "figure1_ordered_differences_table.csv
 print(beta_df)
 
 # =====================================================================
-# PART 3: INTERACTION PLOTS (emmeans) post-hoc interactions
+# INTERACTION PLOTS (emmeans) post-hoc interactions
 # new: let's z score these 
 final_data_z <- final_data_with_pause %>%
   mutate(
@@ -174,12 +174,11 @@ final_data_z <- final_data_with_pause %>%
     pause_Lmax = scale(pause_Lmax)[,1]
   )
 
-# --- Figure 3: Veracity x Valence interaction (4 significant metrics) ---
+# Veracity x Valence interaction (4 significant metrics) ---
 
-# these were sig (figure A)
+# these were sig 
 significant_interaction_metrics <- c("Vmax", "ENTR", "DIV", "RR")
 
-# Emmeans for each: copied from the mu3d state ouput script
 # linear model ME model for each 
 
 # max vertical line length
@@ -208,7 +207,8 @@ pairs(emmeans(model_rr, ~ Veracity | Valence), adjust = "tukey")
 
 # each of these is the predicted value (adjusted for covs + indiv participant differences)
 
-# PLOTS: adopted from pauls code emailed
+# ====================================
+# PLOTS:
 
 # Plot 1: Max Vertical Line Length
 p_vmax <- ggplot(emm_vmax_df, aes(x = Veracity, y = emmean, 
