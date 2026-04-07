@@ -28,6 +28,7 @@ if (!dir.exists(results_dir)) dir.create(results_dir, recursive = TRUE)
 # LOAD AND PREPARE DATA
 # ===============================
 
+# this object will be loaded in from script 02 already, or load the csv yourself
 final_data_with_pause <- read.csv(file.path(data_dir, "deception_srqa_with_pause_1120_final.csv"))
 
 # factor variables
@@ -75,7 +76,7 @@ metric_labels <- c(
 # STEP 1: Z-SCORE ALL RQA METRICS since outcomes are on different scales
 
 final_data_scaled <- final_data_with_pause %>%
-  mutate(across(starts_with("pause_"), 
+  mutate(across(starts_with("pause_") & where(is.numeric),  
                 ~scale(., center = TRUE, scale = TRUE)[,1], #scale fun z scores each col
                 .names = "{.col}_scaled")) #creates new cols
 
@@ -154,10 +155,10 @@ s_plot_vv <- beta_df %>%
 
 print(s_plot_vv)
 
-ggsave(file.path(results_dir, "figure1_ordered_differences_vv.pdf"),
-       plot = s_plot_vv, width = 10, height = 8, dpi = 300, device = cairo_pdf)
+# ggsave(file.path(results_dir, "figure1_ordered_differences_vv.pdf"),
+#        plot = s_plot_vv, width = 10, height = 8, dpi = 300, device = cairo_pdf)
 
-write.csv(beta_df, file.path(results_dir, "figure1_ordered_differences_table.csv"), row.names = FALSE)
+# write.csv(beta_df, file.path(results_dir, "figure1_ordered_differences_table.csv"), row.names = FALSE)
 
 # Print table
 print(beta_df)

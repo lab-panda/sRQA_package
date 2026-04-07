@@ -24,6 +24,7 @@ if (!dir.exists(results_dir)) dir.create(results_dir, recursive = TRUE)
 # LOAD AND PREPARE DATA
 # ===============================
 
+# this object will be loaded in from script 02 already, or load teh csv yourself
 final_data_with_pause <- read.csv(file.path(data_dir, "deception_srqa_with_pause_1120_final.csv"))
 
 # factor variables
@@ -64,7 +65,7 @@ metric_labels <- c(
 # ===============================
 
 final_data_scaled <- final_data_with_pause %>%
-  mutate(across(starts_with("pause_"), 
+  mutate(across(starts_with("pause_") & where(is.numeric), 
                 ~scale(., center = TRUE, scale = TRUE)[,1], #scale fun z scores each col
                 .names = "{.col}_scaled")) #creates new cols
 
@@ -144,10 +145,10 @@ s_plot_vs <- beta_df_2 %>%
 
 print(s_plot_vs)
 
-ggsave(file.path(results_dir, "figure2_ordered_differences_vs.pdf"),
-       plot = s_plot_vs, width = 10, height = 8, dpi = 300, device = cairo_pdf)
+# ggsave(file.path(results_dir, "figure2_ordered_differences_vs.pdf"),
+#        plot = s_plot_vs, width = 10, height = 8, dpi = 300, device = cairo_pdf)
 
-write.csv(beta_df_2, file.path(results_dir, "figure2_ordered_differences_table.csv"), row.names = FALSE)
+# write.csv(beta_df_2, file.path(results_dir, "figure2_ordered_differences_table.csv"), row.names = FALSE)
 
 # Print table
 print(beta_df_2)
@@ -174,21 +175,21 @@ significant_metrics <- c("Vmax", "DIV", "Lmax")
 
 # Max Vertical Line Length
 model_vmax_vs <- lmer(pause_Vmax ~ Veracity * Valence * Sex + Race + (1|participant_ID), 
-                      data = final_data_with_pause)
+                      data = final_data_z)
 emm_vmax_vs <- emmeans(model_vmax_vs, ~ Valence * Sex)
 emm_vmax_vs_df <- as.data.frame(emm_vmax_vs)
 pairs(emmeans(model_vmax_vs, ~ Sex | Valence), adjust = "tukey")
 
 # Divergence
 model_div_vs <- lmer(pause_DIV ~ Veracity * Valence * Sex + Race + (1|participant_ID), 
-                     data = final_data_with_pause)
+                     data = final_data_z)
 emm_div_vs <- emmeans(model_div_vs, ~ Valence * Sex)
 emm_div_vs_df <- as.data.frame(emm_div_vs)
 pairs(emmeans(model_div_vs, ~ Sex | Valence), adjust = "tukey")
 
 # Max Diagonal Length
 model_lmax_vs <- lmer(pause_Lmax ~ Veracity * Valence * Sex + Race + (1|participant_ID), 
-                      data = final_data_with_pause)
+                      data = final_data_z)
 emm_lmax_vs <- emmeans(model_lmax_vs, ~ Valence * Sex)
 emm_lmax_vs_df <- as.data.frame(emm_lmax_vs)
 pairs(emmeans(model_lmax_vs, ~ Sex | Valence), adjust = "tukey")

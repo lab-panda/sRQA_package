@@ -184,5 +184,5 @@ final_data_with_pause <- participant_conditions_pause %>% #merge w original part
 
 final_data_with_pause
 
-write_csv(final_data_with_pause, 
-          file.path(data_dir, "deception_srqa_with_pause_1120_final.csv"))
+# write_csv(final_data_with_pause, 
+#           file.path(data_dir, "deception_srqa_with_pause_1120_final.csv"))
