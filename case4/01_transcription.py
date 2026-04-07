@@ -17,6 +17,15 @@ video_folder = base_folder
 audio_folder = os.path.join(base_folder, "audios")
 output_csv_path = os.path.join(base_folder, "mu3d_sequential_timestamps.csv")
 
+# ================================
+#make sure folder exists and find video files, list them out too
+video_files = [f for f in os.listdir(video_folder) if f.endswith(('.mp4', '.avi', '.mov', '.wmv'))]
+
+if video_files:
+    print("YAY Found video files:", video_files)
+else:
+    print("No. video files not found in the folder!")
+
 # ===============================
 # STEP 1: EXTRACT AUDIO FROM VIDEOS
 successful_extractions = 0
