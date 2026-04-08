@@ -11,12 +11,12 @@ Lloyd, E. P., et al. (2019). Miami University Deception Detection Database. Beha
 | `04_statistical_analysis_part2.R` | Mixed-effects models (Valence × Sex), ordered differences plot, and emmeans interaction plots  |
 | `05_xgboost.R` | XGBoost (DART) with LOOCV and Hyperband tuning for truth vs. lie classification; ROC curve |
 | `deception_srqa_with_pause_1120_final.csv` | Analysis-ready dataset: 4 rows per participant (lie/truth × positive/negative) with 14 sRQA metrics |
-| `final_analysis.csv` | MU3D participant demographics and experimental conditions (used in Step 2) |
+| `final_analysis.csv` | MU3D participant demographics and experimental conditions (used in Step 3) |
 
 ## Reproducing the Results
 1. Request and download the MU3D video files from Miami University.
-2. Run `01_transcription.py` to extract audio and transcribe videos. Requires `whisper-timestamped` and `moviepy`. Produces `mu3d_sequential_timestamps.csv`.
-3. Run `02_cleaning_and_srqa.R` to clean transcriptions, merge with `final_analysis.csv`, and compute sRQA metrics. Produces `deception_srqa_with_pause_1120_final.csv`.
+2. Run `01_transcription.py` to extract audio and transcribe videos (direct local path to MU3D video folder). Produces `mu3d_sequential_timestamps.csv`.
+3. Run `02_cleaning_and_srqa.R` to clean transcriptions, merge with `final_analysis.csv`, and compute sRQA metrics. Produces `deception_srqa_with_pause_1120_final.csv` which is our main feature table.
 4. Run `03_statistical_analysis_part1.R` to fit Veracity × Valence models and produce s plot, 4 interaction plots.
 5. Run `04_statistical_analysis_part2.R` to fit Veracity × Valence × Sex models and produce s plot, 3 interaction plots.
 6. Run `05_xgboost.R` to train and evaluate the XGBoost classifier and produce ROC curve figure
