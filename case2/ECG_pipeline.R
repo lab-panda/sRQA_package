@@ -164,7 +164,7 @@ fig_forest <- resultsM %>%
     x = "AFib Effect Estimate (95% CI)",
     y = "sRQA Measure",
     color = "",
-    title = "Arrhythmyia Patterns in R-R Intervals"
+    title = "Arrhythmia Patterns in R-R Intervals"
   ) +
   theme_bw(base_size = 18) + theme(legend.position="none") 
 
