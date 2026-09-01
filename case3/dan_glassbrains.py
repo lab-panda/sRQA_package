@@ -104,7 +104,7 @@ dan_b_fig = plotting.plot_glass_brain(
     dan_b_img,
     display_mode='xz',  # left, right, top, front views
     colorbar=False,
-    cmap='blue_transparent',
+    cmap='red_transparent',
     threshold=0.5,
     title='Dorsal Attention Network B',
     plot_abs=False,
