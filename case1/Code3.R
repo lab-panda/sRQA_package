@@ -3,8 +3,6 @@ library(ggplot2)
 library(reshape2)
 library(gridExtra)
 
-setwd("D:/Projects/sRQA_paper")
-
 ###############################################################################
 # PART 1: SIMULATION STUDY (100 RUNS)
 ###############################################################################
@@ -133,6 +131,7 @@ print(sim_summary_stats)
 
 ###############################################################################
 # PART 2: Visualizations
+# Figure 4, panels A and C
 ###############################################################################
 # Note values in visualizations are standardized
 # Visualize Three Main Systems (Stochastic, Periodic, Chaotic) (fig2, panel a)
@@ -154,12 +153,12 @@ sim_main_long$variable <- factor(sim_main_long$variable,
                                  labels = c("Recurrence Rate", "Determinism", "Entropy"))
 
 p_sim_main <- ggplot(sim_main_long, aes(x = System, y = value, fill = System, color = System)) +
-  geom_jitter(alpha = 0.2, width = 0.1) +
+  geom_jitter(alpha = 0.2, position = position_jitter(width = 0.1, height = 0, seed = 42)) +
   geom_boxplot(fill = NA, color = "black", alpha = 0.2, linewidth = 0.5, outlier.shape = NA, width = 0.4) +
   facet_wrap(~ variable, scales = "free_y", ncol = 3) +
   scale_color_manual(values = c("Stochastic" = "#E41A1C", "Periodic" = "#377EB8", "Chaotic" = "#4DAF4A")) +
   scale_fill_manual(values  = c("Stochastic" = "#E41A1C", "Periodic" = "#377EB8", "Chaotic" = "#4DAF4A")) +
-  labs(x = NULL, y = "Value") +
+  labs(x = NULL, y = "Z-score") +
   theme_bw() +
   theme(text = element_text(size = 18),
         legend.position = "none",
@@ -186,12 +185,12 @@ sim_regime_long$variable <- factor(sim_regime_long$variable,
 sim_regime_long$System <- factor(sim_regime_long$System, levels = c("Pre-Shift", "Post-Shift"))
 
 p_sim_regime <- ggplot(sim_regime_long, aes(x = System, y = value, fill = System, color = System)) +
-  geom_jitter(alpha = 0.2, width = 0.1) +
+  geom_jitter(alpha = 0.2, position = position_jitter(width = 0.1, height = 0, seed = 42)) +
   geom_boxplot(fill = NA, color = "black", alpha = 0.2, linewidth = 0.5, outlier.shape = NA, width = 0.4) +
   facet_wrap(~ variable, scales = "free_y", ncol = 3) +
   scale_color_manual(values = c("Pre-Shift" = "#FF7F00", "Post-Shift" = "#984EA3")) +
   scale_fill_manual(values  = c("Pre-Shift" = "#FF7F00", "Post-Shift" = "#984EA3")) +
-  labs(x = NULL, y = "Value") +
+  labs(x = NULL, y = "Z-score") +
   theme_bw() +
   theme(text = element_text(size = 18),
         legend.position = "none",
@@ -206,7 +205,6 @@ print(sim_combined_plot)
 ###############################################################################
 # PART3: Statistical Analysis 
 ###############################################################################
-
 # Three main systems
 sim_measures <- c("RR", "DET", "ENTR")
 

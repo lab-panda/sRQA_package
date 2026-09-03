@@ -2,14 +2,9 @@
 
 | File | Description |
 |------|-------------|
-| `single_example.R` | Generates stochastic, periodic, and chaotic time series, applies sRQA, and produces symbolization plots, recurrence plots, Table 1, and windowed regime shift detection |
-| `simulation.R` | Runs 100 iterations of the same three systems, produces boxplots (Figure 2a, 2c), and performs statistical comparisons |
+| `Code1.R` | Generates Figure 1 |
+| `Code2.R` | Generates Figures 2, 3, and 4b|
+| `Code3.R` | Generates Figure 4a, 4c, and windowed analysis of the chaotic system |
+| `Code4.R` | Generates Table 1, Figure S1, Figure S2, Figure S3, Table S1, and Table S2 |
 
-## Reproducing the Results
-
-1. Run `single_example.R` to generate the single-run figures and Table 1 values
-2. Run `simulation.R` to generate the simulation boxplots and statistical results
-
-The scripts can be run independently in any order. If running both in the same R session, variable name prefixes (`s1_` and `sim_`) prevent conflicts.
-
-All file paths are hardcoded and will need to be updated to match your local directory structure.
+The scripts can be run independently in any order. 

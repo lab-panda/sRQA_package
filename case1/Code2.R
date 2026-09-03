@@ -4,13 +4,11 @@ library(ggplot2)
 library(gridExtra)
 library(dplyr)
 library(reshape2)
-
-setwd("D:/Projects/sRQA_paper")
+library(patchwork)
 
 ###############################################################################
 # PART 1: Create single example time series
 ###############################################################################
-
 # Example Time series 
 set.seed(12345)
 
@@ -42,27 +40,27 @@ ts_chaotic2 <- scale(ts_chaotic2)
 fin_ts_chaotic <- rbind(ts_chaotic, ts_chaotic2)
 
 ###############################################################################
-# Part 2: Symbolize and visualize examples 
+# Part 2: Symbolize and visualize examples
+# Figure 2
 ###############################################################################
-
 s1_method <- "rle"
 s1_num_symbols <- 6
 s1_window_size <- 3
 s1_embedding_dimension <- 3
 s1_min_line_length <- 2
 
-# 3a. Stochastic system
+# Stochastic system
 symbols_noise <- symbolize_ts(ts_noise, method = s1_method,
                               num_symbols = s1_num_symbols,
                               window_size = s1_window_size, visualize = F)
 
 # Make nice for plot
-a <- visualize_symbols(ts_noise, symbols_noise, point_size = 1.5, line_size = 0.8,
+a <- visualize_symbols(ts_noise, symbols_noise, point_size = 1.5, line_size = 0.6,
                        alpha = 0.8)
 a_fin <- a + ggtitle("Stochastic Time Series") + theme_minimal(base_size = 18) +
   labs(x = "Time", y = "Value") +
   theme(legend.position = "none", axis.text = element_text(size = 14)) +
-  scale_y_continuous(labels = scales::number_format(accuracy = 0.1))
+  scale_y_continuous(labels = scales::number_format(accuracy = 0.1)) + ylab("Z-score")
 
 rm_noise <- symbolic_recurrence_matrix(symbols_noise,
                                        embedding_dimension = s1_embedding_dimension)
@@ -70,16 +68,16 @@ rqa_noise <- quant_rqa(rm_noise, min_line_length = s1_min_line_length)
 rqa_noise <- as.data.frame(rqa_noise)
 rqa_noise$system <- "noise"
 
-# 3b. Periodic system
+# Periodic system
 symbols_periodic <- symbolize_ts(ts_periodic, method = s1_method,
                                  num_symbols = s1_num_symbols,
                                  window_size = s1_window_size, visualize = F)
 
-b <- visualize_symbols(ts_periodic, symbols_periodic, point_size = 1.5, line_size = 0.8,
+b <- visualize_symbols(ts_periodic, symbols_periodic, point_size = 1.5, line_size = 0.6,
                        alpha = 0.8)
 b_fin <- b + ggtitle("Periodic Time Series") + theme_minimal(base_size = 18) +
   labs(x = "Time", y = "Value") +
-  theme(legend.position = "none", axis.text = element_text(size = 14))
+  theme(legend.position = "none", axis.text = element_text(size = 14)) + ylab("Z-score")
 
 rm_periodic <- symbolic_recurrence_matrix(symbols_periodic,
                                           embedding_dimension = s1_embedding_dimension)
@@ -87,16 +85,17 @@ rqa_periodic <- quant_rqa(rm_periodic, min_line_length = s1_min_line_length)
 rqa_periodic <- as.data.frame(rqa_periodic)
 rqa_periodic$system <- "periodic"
 
-# 3c. Chaotic system (full)
+# Chaotic system (full)
 symbols_chaotic <- symbolize_ts(fin_ts_chaotic, method = s1_method,
                                 num_symbols = s1_num_symbols,
                                 window_size = s1_window_size, visualize = F)
 
-c_plot <- visualize_symbols(fin_ts_chaotic, symbols_chaotic, point_size = 1.5, line_size = 0.8,
+c_plot <- visualize_symbols(fin_ts_chaotic, symbols_chaotic, point_size = 1.5, line_size = 0.6,
                             alpha = 0.8)
 c_fin <- c_plot + ggtitle("Chaotic Time Series") + theme_minimal(base_size = 18) +
   labs(x = "Time", y = "Value") +
-  theme(legend.position = "none", axis.text = element_text(size = 14))
+  theme(legend.position = "bottom", axis.text = element_text(size = 14)) + ylab("Z-score") +
+  guides(color = guide_legend(title = "Symbol"))
 
 rm_chaotic <- symbolic_recurrence_matrix(symbols_chaotic,
                                          embedding_dimension = s1_embedding_dimension)
@@ -104,68 +103,52 @@ rqa_chaotic <- quant_rqa(rm_chaotic, min_line_length = s1_min_line_length)
 rqa_chaotic <- as.data.frame(rqa_chaotic)
 rqa_chaotic$system <- "chaotic"
 
-# Combined plot and results table
-panel1 <- grid.arrange(a_fin, b_fin, c_fin, nrow = 3, ncol = 1)
+# Combined timeseries plot 
+panel1 <- (a_fin / b_fin / c_fin) +
+  plot_annotation(tag_levels = "a", tag_suffix = ")") &
+  theme(plot.tag = element_text(size = 24, face = "plain"))
 print(panel1)
-
-# Combine results for Table 1
-s1_comb_results <- rbind(rqa_noise, rqa_periodic, rqa_chaotic)
-print(s1_comb_results)
 
 ###############################################################################
 # Part3: Visualize RPs (symbols) 
+# Figure 3
 ###############################################################################
-
-p_srp_noise <- symbol_recurrence_plot(
-  symbols_noise,
-  embedding_dimension = s1_embedding_dimension,
-  window_size = s1_window_size,
-  title = "Stochastic (White Noise)",
-  theme = "light",
-  point_size = 0.5,
-  alpha = 0.5
-)
-
-p_srp_noise <- p_srp_noise + theme_bw(base_size = 18) + ggtitle("Stochastic") +
+p_srp_noise <- symbol_recurrence_plot(symbols_noise,embedding_dimension = s1_embedding_dimension,
+  window_size = s1_window_size,theme = "light",point_size = 0.3,alpha = 0.8) + ggtitle("Stochastic") +
+  theme_bw(base_size = 18) +
   theme(legend.position = "none") + labs(subtitle = NULL) +
   scale_x_continuous(breaks = seq(0, 200, 50)) +
-  scale_y_continuous(breaks = seq(0, 200, 50)) + coord_fixed(ratio = 1)
+  scale_y_continuous(breaks = seq(0, 200, 50)) + coord_fixed(ratio = 1) +
+  guides(color = guide_legend(override.aes = list(size = 2, alpha = 1))) +
+  theme(plot.title = element_text(hjust = 0)) + ylab("Time") + xlab("Time")
 
-p_srp_periodic <- symbol_recurrence_plot(
-  symbols_periodic,
-  embedding_dimension = s1_embedding_dimension,
-  window_size = s1_window_size,
-  title = "Periodic (f=0.1)",
-  theme = "light",
-  point_size = 0.5,
-  alpha = 0.5
-)
+p_srp_periodic <- symbol_recurrence_plot(symbols_periodic,embedding_dimension = s1_embedding_dimension,
+  window_size = s1_window_size,theme = "light",point_size = 0.3,alpha = 0.8) + ggtitle("Periodic") +
+  theme_bw(base_size = 18) +
+  theme(legend.position = "right") + labs(subtitle = NULL) +
+  scale_x_continuous(breaks = seq(0, 200, 50)) +
+  scale_y_continuous(breaks = seq(0, 200, 50)) + coord_fixed(ratio = 1) +
+  guides(color = guide_legend(override.aes = list(size = 2, alpha = 1))) +
+  theme(plot.title = element_text(hjust = 0)) + ylab("Time") + xlab("Time")
 
-p_srp_periodic <- p_srp_periodic + theme_bw(base_size = 18) + ggtitle("Periodic") +
+p_srp_chaotic <- symbol_recurrence_plot(symbols_chaotic, embedding_dimension = s1_embedding_dimension,
+  window_size = s1_window_size, theme = "light",point_size = 0.3,alpha = 0.8) + ggtitle("Chaotic") +
+  theme_bw(base_size = 18) +
   theme(legend.position = "none") + labs(subtitle = NULL) +
   scale_x_continuous(breaks = seq(0, 200, 50)) +
-  scale_y_continuous(breaks = seq(0, 200, 50)) + coord_fixed(ratio = 1)
+  scale_y_continuous(breaks = seq(0, 200, 50)) + coord_fixed(ratio = 1) +
+  guides(color = guide_legend(override.aes = list(size = 2, alpha = 1))) +
+  theme(plot.title = element_text(hjust = 0)) + ylab("Time") + xlab("Time")
 
-p_srp_chaotic <- symbol_recurrence_plot(
-  symbols_chaotic,
-  embedding_dimension = s1_embedding_dimension,
-  window_size = s1_window_size,
-  title = "Chaotic with Regime Shift",
-  theme = "light",
-  point_size = 0.5,
-  alpha = 0.5
-)
-
-p_srp_chaotic <- p_srp_chaotic + theme_bw(base_size = 18) + ggtitle("Chaotic") +
-  theme(legend.position = "none") + labs(subtitle = NULL) +
-  scale_x_continuous(breaks = seq(0, 200, 50)) +
-  scale_y_continuous(breaks = seq(0, 200, 50)) + coord_fixed(ratio = 1)
-
-panel2 <- grid.arrange(p_srp_noise, p_srp_periodic, p_srp_chaotic, ncol = 3)
+# Combined RP plot
+panel2 <- (p_srp_noise / p_srp_periodic / p_srp_chaotic) +
+  plot_annotation(tag_levels = "a", tag_suffix = ")") &
+  theme(plot.tag = element_text(size = 24, face = "plain"))
 print(panel2)
 
 ###############################################################################
 # Part 4: Example detecting regime shift
+# Figure 4, panel B
 ###############################################################################
 
 s1_window_width <- 40
