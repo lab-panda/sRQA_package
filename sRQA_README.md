@@ -8,7 +8,7 @@ In RStudio: Packages → Install → Install from: Package Archive File, then br
 
 Or from the R console:
 ```r
-install.packages("path/to/sRQA_0.3.0.tar.gz", repos = NULL, type = "source")
+install.packages("path/to/sRQA_0.4.0.tar.gz", repos = NULL, type = "source")
 ```
 
 ## Case Studies
