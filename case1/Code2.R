@@ -114,7 +114,7 @@ print(panel1)
 # Figure 3
 ###############################################################################
 p_srp_noise <- symbol_recurrence_plot(symbols_noise,embedding_dimension = s1_embedding_dimension,
-  window_size = s1_window_size,theme = "light",point_size = 0.3,alpha = 0.8) + ggtitle("Stochastic") +
+  theme = "light",point_size = 0.3,alpha = 0.8) + ggtitle("Stochastic") +
   theme_bw(base_size = 18) +
   theme(legend.position = "none") + labs(subtitle = NULL) +
   scale_x_continuous(breaks = seq(0, 200, 50)) +
@@ -123,7 +123,7 @@ p_srp_noise <- symbol_recurrence_plot(symbols_noise,embedding_dimension = s1_emb
   theme(plot.title = element_text(hjust = 0)) + ylab("Time") + xlab("Time")
 
 p_srp_periodic <- symbol_recurrence_plot(symbols_periodic,embedding_dimension = s1_embedding_dimension,
-  window_size = s1_window_size,theme = "light",point_size = 0.3,alpha = 0.8) + ggtitle("Periodic") +
+  theme = "light",point_size = 0.3,alpha = 0.8) + ggtitle("Periodic") +
   theme_bw(base_size = 18) +
   theme(legend.position = "right") + labs(subtitle = NULL) +
   scale_x_continuous(breaks = seq(0, 200, 50)) +
@@ -132,7 +132,7 @@ p_srp_periodic <- symbol_recurrence_plot(symbols_periodic,embedding_dimension = 
   theme(plot.title = element_text(hjust = 0)) + ylab("Time") + xlab("Time")
 
 p_srp_chaotic <- symbol_recurrence_plot(symbols_chaotic, embedding_dimension = s1_embedding_dimension,
-  window_size = s1_window_size, theme = "light",point_size = 0.3,alpha = 0.8) + ggtitle("Chaotic") +
+  theme = "light",point_size = 0.3,alpha = 0.8) + ggtitle("Chaotic") +
   theme_bw(base_size = 18) +
   theme(legend.position = "none") + labs(subtitle = NULL) +
   scale_x_continuous(breaks = seq(0, 200, 50)) +
